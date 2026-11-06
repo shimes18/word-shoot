@@ -23,6 +23,11 @@ bulletposition=(1000,1000)
 bulletx=1000
 a=50
 
+x=1
+
+explosionx=1000
+explosiony=1000
+
 shot=False
 shot1=False
 shot2=False
@@ -46,9 +51,14 @@ with open('words_alpha.txt') as f:
 bullet = pygame.image.load("images/06.png").convert_alpha()
 bullet = pygame.transform.scale(bullet,(30,30))
 
+explosion = pygame.image.load("images/explosion.png").convert_alpha()
+explosion = pygame.transform.scale(explosion,(20,60))
+
 ship = pygame.image.load("images/ship.png").convert_alpha()
 ship = pygame.transform.scale(ship,(150,400))
 ship = pygame.transform.rotate(ship,90)
+
+etimer=0
 
 fps=30
 flash=int(fps/4)
@@ -209,6 +219,7 @@ while running:
         if bullety<=wordy1 or bullety<=wordy2 or bullety<=wordy:
             explosionx=bulletx
             explosiony=bullety
+            etimer=5
             bullety=1000
             bulletposition= (1000,bullety)
             shot=False
@@ -220,20 +231,14 @@ while running:
                 shot3=True
 
         if shot1:
-            explosionx=1000
-            explosiony=1000
             z=random.choice(words)
             wordy=0
             shot1=False
         if shot2:            
-            explosionx=1000
-            explosiony=1000
             z1=random.choice(words)
             wordy1=0
             shot2=False
         if shot3:
-            explosionx=1000
-            explosiony=1000
             wordy2=0
             z2=random.choice(words)
             shot3=False
@@ -256,17 +261,24 @@ while running:
             wordshow2 = font.render(z2.capitalize(),True,(255,255,255))
             screen.blit(wordshow2,(280,wordy2))
 
+        if etimer>0:
+            x+=0.1
+            etimer-=1
+            explosion = pygame.transform.scale(explosion,(60*x,20))
+            screen.blit(explosion,(explosionx,explosiony))
+        if etimer==0:
+            x=1
         screen.blit(wordshow,(165,wordy))
         
 
     if game_over:
         wpm = font.render("Your word per minute",True,(255,255,255))
-        wpm2= font.render(" rate was: " + str(score/time*60)[0:5],True,(255,255,255))
+        wpm2= font.render("  was: " + str(score/time*60)[0:5],True,(255,255,255))
         pressc=font.render("PRESS R TO PLAY AGAIN",True,(255,255,255))
 
-        screen.blit(wpm, (100,250))
+        screen.blit(wpm, (80,250))
         screen.blit(pressc, (80,350))
-        screen.blit(wpm2, (100,300))
+        screen.blit(wpm2, (130,300))
     screen.blit(bullet,bulletposition)
 
     screen.blit(playertext,(160,550))
