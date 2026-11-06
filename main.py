@@ -213,8 +213,15 @@ while running:
             wordshow2 = font.render(z2.capitalize(),True,(255,255,255))
             screen.blit(wordshow2,(280,wordy2))
 
+        screen.blit(wordshow,(165,wordy))
+        
 
-    screen.blit(wordshow,(165,wordy))
+    if game_over:
+        wpm = font.render("Your word per minute",True,(255,255,255))
+        wpm2= font.render(" rate was: " + str(score/time*60),True,(255,255,255))
+
+        screen.blit(wpm, (100,250))
+        screen.blit(wpm2, (100,300))
     screen.blit(bullet,bulletposition)
 
     screen.blit(playertext,(160,550))
