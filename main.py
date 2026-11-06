@@ -46,6 +46,10 @@ with open('words_alpha.txt') as f:
 bullet = pygame.image.load("images/06.png").convert_alpha()
 bullet = pygame.transform.scale(bullet,(30,30))
 
+ship = pygame.image.load("images/ship.png").convert_alpha()
+ship = pygame.transform.scale(ship,(150,400))
+ship = pygame.transform.rotate(ship,90)
+
 fps=30
 flash=int(fps/4)
 timer=10*fps
@@ -73,6 +77,37 @@ while running:
                 text += event.unicode
                 print(text)
 
+        if game_over and event.type==pygame.KEYDOWN and event.key==pygame.K_r:
+            hp=100
+            z=random.choice(words)
+            z1=random.choice(words)
+            z2=random.choice(words)
+            bulletposition=(1000,1000)
+
+            bulletx=1000
+            a=50
+
+            shot=False
+            shot1=False
+            shot2=False
+            shot3=False
+
+            wordy=0
+            wordy1,wordy2=0,0
+
+            second_word=False
+            third_word=False
+            game_over=False
+
+            bullety=4000
+
+            score=0
+
+            time=0
+            text=""
+            hpcolor=(0, 128, 0)          
+            game_over=False
+
     if not game_over:
         timer+=1
         
@@ -87,7 +122,7 @@ while running:
             shot=True
             
         if (text.lower()==z1):
-            bullety=500
+            bullety=400
             bulletx=40
             score+=1
             text=""
@@ -96,7 +131,7 @@ while running:
             shot=True
 
         if (text.lower()==z2):
-            bullety=500
+            bullety=400
             bulletx=350
             score+=1
             text=""
@@ -123,7 +158,7 @@ while running:
 
         flash-=1
 
-        if wordy1>500:
+        if wordy1>400:
             hp-=len(z1)
             z1=random.choice(words)
             wordy1=0
@@ -133,7 +168,7 @@ while running:
 
             print(hp)
 
-        if wordy2>500:
+        if wordy2>400:
             hp-=len(z2)
             z2=random.choice(words)
             wordy2=0
@@ -151,6 +186,7 @@ while running:
             third_word=True
 
         if hp<=90:
+            text=""
             time=(timer/fps-10)
             game_over=True
 
@@ -171,6 +207,8 @@ while running:
 
 
         if bullety<=wordy1 or bullety<=wordy2 or bullety<=wordy:
+            explosionx=bulletx
+            explosiony=bullety
             bullety=1000
             bulletposition= (1000,bullety)
             shot=False
@@ -182,14 +220,20 @@ while running:
                 shot3=True
 
         if shot1:
+            explosionx=1000
+            explosiony=1000
             z=random.choice(words)
             wordy=0
             shot1=False
-        if shot2:
+        if shot2:            
+            explosionx=1000
+            explosiony=1000
             z1=random.choice(words)
             wordy1=0
             shot2=False
         if shot3:
+            explosionx=1000
+            explosiony=1000
             wordy2=0
             z2=random.choice(words)
             shot3=False
@@ -200,9 +244,8 @@ while running:
         hpt= font.render(str(hp),True,(255,255,255))
         screen.blit(hpt,(2*hp+20,0))
         hpbar = pygame.Rect(0,0,hp*2,20)   
-        pygame.draw.rect(screen,color,player)
+        screen.blit(ship,(0,460))
         pygame.draw.rect(screen,hpcolor,hpbar)
-        pygame.draw.arc(screen,(255,255,255),base,0,3.14159,5)
         playertext = font.render(text,True,(255,255,255))
         wordshow = font.render(z.capitalize(),True,(255,255,255))
         if second_word:
@@ -218,9 +261,11 @@ while running:
 
     if game_over:
         wpm = font.render("Your word per minute",True,(255,255,255))
-        wpm2= font.render(" rate was: " + str(score/time*60),True,(255,255,255))
+        wpm2= font.render(" rate was: " + str(score/time*60)[0:5],True,(255,255,255))
+        pressc=font.render("PRESS R TO PLAY AGAIN",True,(255,255,255))
 
         screen.blit(wpm, (100,250))
+        screen.blit(pressc, (80,350))
         screen.blit(wpm2, (100,300))
     screen.blit(bullet,bulletposition)
 
