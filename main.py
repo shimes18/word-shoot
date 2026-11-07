@@ -17,12 +17,14 @@ hp=100
 color=(255,255,255)
 
 font = pygame.font.Font(None,32)
+font2 = pygame.font.Font(None,24)
 
 bulletposition=(1000,1000)
 
 bulletx=1000
 a=50
 
+game_start=False
 x=1
 
 explosionx=1000
@@ -71,7 +73,7 @@ etimer=0
 
 fps=30
 flash=int(fps/4)
-timer=10*fps
+timer=0
 z=random.choice(words)
 z1=random.choice(words)
 z2=random.choice(words)
@@ -94,7 +96,7 @@ while running:
             else:
                 text += event.unicode
 
-        if game_over and event.type==pygame.KEYDOWN and event.key==pygame.K_r:
+        if game_over and event.type==pygame.KEYDOWN and event.key==pygame.K_r and game_start:
             hp=100
             z=random.choice(words)
             z1=random.choice(words)
@@ -125,7 +127,10 @@ while running:
             hpcolor=(0, 128, 0)          
             game_over=False
 
-    if not game_over:
+        if not game_start and event.type==pygame.KEYDOWN and event.key==pygame.K_SPACE:
+            game_start=True
+
+    if not game_over and game_start:
         timer+=1
         
         if (text.lower()==z):
@@ -198,10 +203,12 @@ while running:
         if score>=15:
             wordy2+=2
             third_word=True
+        
+        time=(timer/fps)
 
         if hp<=0:
             text=""
-            time=(timer/fps-10)
+            time=(timer/fps)
             game_over=True
 
         if hp<=70 and hp>30:
@@ -252,13 +259,13 @@ while running:
     screen.blit(bg,(0,0))
     scoret = font.render("Score: " + str(score),True,(255,255,255))
     screen.blit(scoret,(150,30))
-    if not game_over:
+    if not game_over and game_start:
         hpt= font.render(str(hp),True,(255,255,255))
         screen.blit(hpt,(2*hp+20,0))
         hpbar = pygame.Rect(0,0,hp*2,20)   
         screen.blit(ship,(0,460))
         pygame.draw.rect(screen,hpcolor,hpbar)
-        playertext = font.render(text,True,(255,255,255))
+        playertext = font.render(text,True,(245, 245, 220))
         wordshow = font.render(z.capitalize(),True,(255,255,255))
         if second_word:
             wordshow1 = font.render(z1.capitalize(),True,(255,255,255))
@@ -276,6 +283,8 @@ while running:
         if etimer==0:
             x=1
         screen.blit(wordshow,(165,wordy))
+        screen.blit(playertext,(160,550))
+
         
     bulletposition = list(bulletposition)
     if game_over:
@@ -286,12 +295,25 @@ while running:
         screen.blit(wpm, (80,250))
         screen.blit(pressc, (80,350))
         screen.blit(wpm2, (130,300))
+
     screen.blit(bullet,bulletposition)
     screen.blit(bullet,[bulletposition[0]+30,bulletposition[1]])
     screen.blit(bullet,[bulletposition[0]-30,bulletposition[1]])
 
-    screen.blit(playertext,(160,550))
+    if not game_start:
+        rule = font2.render("The words are not case sensitive",True,(255,255,255))
+        rule2 = font2.render("Your input text gets removed after losing hp",True,(255,255,255))
+        andt= font2.render("and",True,(255,255,255))
+        spacet = font.render("Press spacebar to start",True,(255,255,255))
+
+        screen.blit(rule,(100,200))
+        screen.blit(andt,(200,250))
+        screen.blit(rule2,(50,300))
+        screen.blit(spacet,(100,350))
+
+
     pygame.display.flip()
     clock.tick(fps)
+    print(time)
 
 pygame.quit()
