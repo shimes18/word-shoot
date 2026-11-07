@@ -43,7 +43,12 @@ game_over=False
 bullety=4000
 
 shotsound= pygame.mixer.Sound("sounds/shot.ogg")
-shotsound.set_volume(0.5)
+shotsound.set_volume(0.6)
+
+bgsound= pygame.mixer.Sound("sounds/bg1.ogg")
+bgsound.set_volume(0.1)
+bgsound.play(-1)
+
 
 with open('words_alpha.txt') as f:
     words= [w for w in (line.strip() for line in f) if 3<= len(w) <= 10 ]
@@ -123,7 +128,6 @@ while running:
     if not game_over:
         timer+=1
         
-
         if (text.lower()==z):
             bullety=400
             bulletx=200
@@ -195,7 +199,7 @@ while running:
             wordy2+=2
             third_word=True
 
-        if hp<=90:
+        if hp<=0:
             text=""
             time=(timer/fps-10)
             game_over=True
