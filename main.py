@@ -33,8 +33,8 @@ shot1=False
 shot2=False
 shot3=False
 
-wordy=0
-wordy1,wordy2=0,0
+wordy=50
+wordy1,wordy2=50,50
 
 second_word=False
 third_word=False
@@ -43,7 +43,7 @@ game_over=False
 bullety=4000
 
 shotsound= pygame.mixer.Sound("sounds/shot.ogg")
-shotsound.set_volume(0.7)
+shotsound.set_volume(0.5)
 
 with open('words_alpha.txt') as f:
     words= [w for w in (line.strip() for line in f) if 3<= len(w) <= 10 ]
@@ -68,7 +68,7 @@ z1=random.choice(words)
 z2=random.choice(words)
 
 
-player = pygame.Rect(180,500,40,40)
+player = pygame.Rect(180,500,50,50)
 hpbar = pygame.Rect(0,0,20,hp*2)
 
 hpcolor=(0, 128, 0)
@@ -82,10 +82,8 @@ while running:
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 text = text[:-1]
-                print(text)
             else:
                 text += event.unicode
-                print(text)
 
         if game_over and event.type==pygame.KEYDOWN and event.key==pygame.K_r:
             hp=100
@@ -102,8 +100,8 @@ while running:
             shot2=False
             shot3=False
 
-            wordy=0
-            wordy1,wordy2=0,0
+            wordy=50
+            wordy1,wordy2=50,50
 
             second_word=False
             third_word=False
@@ -124,7 +122,7 @@ while running:
 
         if (text.lower()==z):
             bullety=400
-            bulletx=180
+            bulletx=200
             text=""
             a=1
             score+=1
@@ -133,7 +131,7 @@ while running:
             
         if (text.lower()==z1):
             bullety=400
-            bulletx=40
+            bulletx=50
             score+=1
             text=""
             shotsound.play()
@@ -157,9 +155,8 @@ while running:
         if wordy>400:
             hp-=len(z)
             z=random.choice(words)
-            wordy=0
+            wordy=50
             text=""
-            print(hp)
             flash=int(fps/4)
             color=(255,0,0)
             
@@ -171,21 +168,20 @@ while running:
         if wordy1>400:
             hp-=len(z1)
             z1=random.choice(words)
-            wordy1=0
+            wordy1=50
             text=""
             color=(255,0,0)
             flash=int(fps/4)
 
-            print(hp)
 
         if wordy2>400:
             hp-=len(z2)
             z2=random.choice(words)
-            wordy2=0
+            wordy2=50
             text=""
             color=(255,0,0)
             flash=int(fps/4)
-            print(hp)
+
 
 
         if score>=5:
@@ -232,19 +228,21 @@ while running:
 
         if shot1:
             z=random.choice(words)
-            wordy=0
+            wordy=50
             shot1=False
         if shot2:            
             z1=random.choice(words)
-            wordy1=0
+            wordy1=50
             shot2=False
         if shot3:
-            wordy2=0
+            wordy2=50
             z2=random.choice(words)
             shot3=False
 
 
     screen.fill((20,20,20))
+    scoret = font.render("Score: " + str(score),True,(255,255,255))
+    screen.blit(scoret,(150,30))
     if not game_over:
         hpt= font.render(str(hp),True,(255,255,255))
         screen.blit(hpt,(2*hp+20,0))
@@ -270,7 +268,7 @@ while running:
             x=1
         screen.blit(wordshow,(165,wordy))
         
-
+    bulletposition = list(bulletposition)
     if game_over:
         wpm = font.render("Your word per minute",True,(255,255,255))
         wpm2= font.render("  was: " + str(score/time*60)[0:5],True,(255,255,255))
@@ -280,6 +278,8 @@ while running:
         screen.blit(pressc, (80,350))
         screen.blit(wpm2, (130,300))
     screen.blit(bullet,bulletposition)
+    screen.blit(bullet,[bulletposition[0]+30,bulletposition[1]])
+    screen.blit(bullet,[bulletposition[0]-30,bulletposition[1]])
 
     screen.blit(playertext,(160,550))
     pygame.display.flip()
