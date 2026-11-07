@@ -54,6 +54,10 @@ bullet = pygame.transform.scale(bullet,(30,30))
 explosion = pygame.image.load("images/explosion.png").convert_alpha()
 explosion = pygame.transform.scale(explosion,(20,60))
 
+
+bg = pygame.image.load("images/bg.png").convert_alpha()
+bg = pygame.transform.scale(bg,(400,600))
+
 ship = pygame.image.load("images/ship.png").convert_alpha()
 ship = pygame.transform.scale(ship,(150,400))
 ship = pygame.transform.rotate(ship,90)
@@ -241,6 +245,7 @@ while running:
 
 
     screen.fill((20,20,20))
+    screen.blit(bg,(0,0))
     scoret = font.render("Score: " + str(score),True,(255,255,255))
     screen.blit(scoret,(150,30))
     if not game_over:
